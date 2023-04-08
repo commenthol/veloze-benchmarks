@@ -1,17 +1,32 @@
 import http from 'http'
 import serverBaseRouter from 'server-base-router'
+import { json } from './support/index.js'
 
-http.createServer(
-  serverBaseRouter({
-    '@setup' (ctx) {
-      ctx.middlewareFunctions = []
+const router = serverBaseRouter({
+  '@setup' (ctx) {
+    ctx.middlewareFunctions = []
+  },
+  '/': {
+    get (req, res) {
+      json(res, { hello: 'world' })
     },
-    '/': {
-      get (req, res) {
-        res.setHeader('content-type', 'application/json; charset=utf-8')
-        res.json({ hello: 'world' })
-      }
+    post (req, res) {
+      json(res, { created: true }, 201)
     }
-  })
-)
-  .listen(3000)
+  },
+  '/:hello': {
+    get (req, res, params) {
+      const { hello } = params
+      json(res, { hello })
+    }
+  },
+  '^/.*': {
+    put (req, res) {
+      const status = 405
+      json(res, { status }, status)
+    }
+  }
+})
+
+const server = http.createServer(router)
+server.listen(3000)

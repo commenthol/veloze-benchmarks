@@ -10,7 +10,7 @@ git clone https://github.com/commenthol/veloze-benchmarks
 # as usual
 npm i
 # start the tests
-npm run bench 
+npm start
 # compare with printing a markdown table
 npm run table
 ```

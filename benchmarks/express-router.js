@@ -1,11 +1,28 @@
 import http from 'http'
 import { Router } from 'express'
+import { json } from './support/index.js'
 
-const app = new Router()
+const router = new Router()
 
-app.get('/', function (req, res) {
-  res.setHeader('content-type', 'application/json')
-  res.end(JSON.stringify({ hello: 'world' }))
+router.get('/', (req, res) => {
+  json(res, { hello: 'world' })
+})
+router.post('/', (req, res) => {
+  json(res, { created: true }, 201)
+})
+router.get('/:hello', (req, res) => {
+  const { hello } = req.params
+  json(res, { hello })
+})
+router.put('/*', (req, res) => {
+  const status = 405
+  json(res, { status }, status)
 })
 
-http.createServer(app).listen(3000)
+const app = (req, res) => router(req, res, (err) => {
+  const status = err ? 500 : 404
+  json(res, { status }, status)
+})
+
+const server = http.createServer(app)
+server.listen(3000)

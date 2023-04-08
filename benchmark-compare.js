@@ -134,6 +134,7 @@ function compareResults (markdown) {
     ])
   }
   writeFileSync('benchmark-results.json', JSON.stringify(outputResults), 'utf8')
+  // console.log(table)
   return table.toString()
 }
 

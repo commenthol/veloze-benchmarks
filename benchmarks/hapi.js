@@ -18,6 +18,29 @@ async function start () {
       return { hello: 'world' }
     }
   })
+  server.route({
+    method: 'POST',
+    path: '/',
+    handler: function (request, h) {
+      return h.response({ created: true }).code(201)
+    }
+  })
+  server.route({
+    method: 'GET',
+    path: '/{hello}',
+    handler: function (request, h) {
+      const { hello } = request.params
+      return { hello }
+    }
+  })
+  server.route({
+    method: 'PUT',
+    path: '/foo', // wildcards not supported!
+    handler: function (request, h) {
+      const status = 405
+      return h.response({ status }).code(status)
+    }
+  })
 
   await server.start()
 }

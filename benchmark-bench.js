@@ -11,8 +11,11 @@ run().catch(err => {
 
 async function run () {
   const options = await getBenchmarkOptions()
-  const modules = options.all ? choices : await select()
-  console.log(modules)
+  // options.url = '/kitty'
+  options.url = '/'
+  const _modules = options.all ? choices : await select()
+  const modules = shuffle(_modules)
+  console.log(options, modules)
   return bench(options, modules)
 }
 
@@ -89,4 +92,20 @@ async function select () {
     }
   ])
   return result.list
+}
+
+/**
+ * shuffle an array (fisher-yates)
+ * @param {any[]} arr
+ * @returns {any[]} shuffled array
+ */
+export function shuffle (arr) {
+  const _arr = [...arr]
+
+  for (let i = _arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_arr[i], _arr[j]] = [_arr[j], _arr[i]]
+  }
+
+  return _arr
 }

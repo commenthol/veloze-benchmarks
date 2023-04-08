@@ -1,4 +1,4 @@
-function Employee({ id = null, title = null, employer = null } = {}) {
+function Employee ({ id = null, title = null, employer = null } = {}) {
   this.id = id
   this.title = title
   this.employer = employer

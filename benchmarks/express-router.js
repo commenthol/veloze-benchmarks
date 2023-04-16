@@ -1,6 +1,6 @@
 import http from 'http'
 import { Router } from 'express'
-import { json } from './support/index.js'
+import { json } from './support/json.js'
 
 const router = new Router()
 

@@ -1,6 +1,6 @@
 import connect from 'connect'
 import routerF from 'router'
-import { json } from './support/index.js'
+import { json } from './support/json.js'
 
 const router = routerF()
 const app = connect()

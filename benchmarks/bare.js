@@ -1,5 +1,5 @@
 import * as http from 'http'
-import { jsonSchema, json } from './support/index.js'
+import { json } from './support/json.js'
 
 const app = (req, res) => {
   const { method, url } = req
@@ -8,13 +8,13 @@ const app = (req, res) => {
 
   if (method === 'GET') {
     if (path === '/') {
-      jsonSchema(res, { hello: 'world' })
+      json(res, { hello: 'world' })
       return
     } else {
       // eslint-disable-next-line no-unused-vars
       const [_, hello, other] = path.split('/')
       if (hello && !other) {
-        jsonSchema(res, { hello })
+        json(res, { hello })
         return
       }
     }

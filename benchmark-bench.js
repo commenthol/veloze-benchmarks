@@ -11,8 +11,8 @@ run().catch(err => {
 
 async function run () {
   const options = await getBenchmarkOptions()
-  // options.url = '/kitty'
-  options.url = '/'
+  options.url = '/kitty'
+  // options.url = '/'
   const _modules = options.all ? choices : await select()
   const modules = shuffle(_modules)
   console.log(options, modules)

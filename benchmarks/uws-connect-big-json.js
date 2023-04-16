@@ -1,12 +1,11 @@
-import polka from 'polka'
-import { json } from './support/json.js'
+import { App } from 'uws-connect'
 import { getJobs } from './support/bigjson.js'
 
-const app = polka()
+const app = new App()
 
 app.get('/', function (req, res) {
   const jobs = getJobs()
-  json(res, jobs)
+  res.send(jobs)
 })
 
 app.listen(3000)

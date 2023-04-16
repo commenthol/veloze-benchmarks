@@ -1,17 +1,17 @@
 import polka from 'polka'
-import { jsonSchema, json } from './support/index.js'
+import { json } from './support/json.js'
 
 const app = polka()
 
 app.get('/', (req, res) => {
-  jsonSchema(res, { hello: 'world' })
+  json(res, { hello: 'world' })
 })
 app.post('/', (req, res) => {
   json(res, { created: true }, 201)
 })
 app.get('/:hello', (req, res) => {
   const { hello } = req.params
-  jsonSchema(res, { hello })
+  json(res, { hello })
 })
 app.put('/*', (req, res) => {
   const status = 405

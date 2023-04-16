@@ -1,7 +1,7 @@
 import http from 'http'
 import App from 'yeps'
 import Router from 'yeps-router'
-import { json } from './support/index.js'
+import { json } from './support/json.js'
 
 const app = new App()
 const router = new Router()

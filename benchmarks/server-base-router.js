@@ -1,6 +1,6 @@
 import http from 'http'
 import serverBaseRouter from 'server-base-router'
-import { json } from './support/index.js'
+import { json } from './support/json.js'
 
 const router = serverBaseRouter({
   '@setup' (ctx) {

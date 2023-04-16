@@ -3,6 +3,7 @@ import supertest from 'supertest'
 import { fork } from 'child_process'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
+import { mdTable } from '../lib/mdTable.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -43,8 +44,10 @@ const update = (url) =>
     .put('/foo')
     .expect(405)
 
-const startup = async (url) => {
-  console.time('startup')
+const startupTimes = {}
+
+const startup = async (url, handler) => {
+  const start = process.hrtime.bigint()
   const end = Date.now() + 500
   while (Date.now() < end) {
     const res = await supertest(url).get('/').catch(() => {})
@@ -53,7 +56,10 @@ const startup = async (url) => {
     }
     await nap(0)
   }
-  console.timeEnd('startup')
+  const stop = process.hrtime.bigint() - start
+  const ms = (Number(stop) * 10e-7).toFixed(0)
+  startupTimes[handler] = ms
+  console.log('startup: %s: %s', handler, ms)
 }
 
 const packages = [
@@ -72,6 +78,7 @@ const packages = [
   'server-base-router',
   'take-five',
   'total',
+  'uws-connect',
   'veloze',
   'veloze-router',
   'yeps-router'
@@ -79,31 +86,46 @@ const packages = [
 
 const url = 'http://127.0.0.1:3000'
 
-for (const handler of packages) {
-  describe(handler, async () => {
-    let forked
-    before(async () => {
-      forked = fork(join(__dirname, '..', 'benchmarks', handler + '.js'))
-      await startup(url)
-    })
-    after(() => {
-      forked.kill('SIGINT')
-    })
-
-    it('get', async () => {
-      await get(url)
-    })
-    it('getParam', async () => {
-      await getParam(url)
-    })
-    it('post', async () => {
-      await post(url)
-    })
-    it('update', async () => {
-      await update(url)
-    })
-    it('notFound', async () => {
-      await notFound(url)
-    })
+describe('test', function () {
+  after(() => {
+    const sortedTimes = Object.entries(startupTimes)
+      .sort((a, b) => a[1] - b[1])
+      .map(([k, v]) => [v, k])
+    const table = [
+      ['Startup (ms)', ''],
+      ['--:', '---'],
+      ...sortedTimes
+    ]
+    console.log(mdTable(table))
   })
-}
+
+  for (const handler of packages) {
+    describe(handler, async () => {
+      let forked
+      before(async () => {
+        forked = fork(join(__dirname, '..', 'benchmarks', handler + '.js'))
+        await startup(url, handler)
+      })
+      after(async () => {
+        forked.kill('SIGINT')
+        await nap(20)
+      })
+
+      it('get', async () => {
+        await get(url)
+      })
+      it('getParam', async () => {
+        await getParam(url)
+      })
+      it('post', async () => {
+        await post(url)
+      })
+      it('update', async () => {
+        await update(url)
+      })
+      it('notFound', async () => {
+        await notFound(url)
+      })
+    })
+  }
+})

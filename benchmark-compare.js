@@ -3,12 +3,12 @@
 import { platform, arch, cpus, totalmem } from 'os'
 import { program } from 'commander'
 import inquirer from 'inquirer'
-import Table from 'cli-table'
 import chalk from 'chalk'
 import { join } from 'path'
 import { readdirSync, readFileSync, writeFileSync } from 'fs'
 import { info } from './lib/packages.js'
 import { compare } from './lib/autocannon.js'
+import { mdTable } from './lib/mdTable.js'
 
 const resultsPath = join(process.cwd(), 'results')
 
@@ -51,8 +51,7 @@ function updateReadme () {
 
 * __Machine:__ ${machineInfo}
 * __Node:__ \`${process.version}\`
-* __Run:__ ${new Date()}
-* __Method:__ \`autocannon -c 100 -d 40 -p 10 localhost:3000\` (two rounds; one to warm-up, one to measure)
+* __Method:__ \`autocannon -c 100 -d 10 -p 10 localhost:3000\` (two rounds; one to warm-up, one to measure)
 
 ${compareResults(true)}
 `
@@ -61,40 +60,10 @@ ${compareResults(true)}
 }
 
 function compareResults (markdown) {
-  const tableStyle = !markdown
-    ? {}
-    : {
-        chars: {
-          top: '',
-          'top-left': '',
-          'top-mid': '',
-          'top-right': '',
-          bottom: '',
-          'bottom-left': '',
-          'bottom-mid': '',
-          'bottom-right': '',
-          mid: '',
-          'left-mid': '',
-          'mid-mid': '',
-          'right-mid': '',
-          left: '|',
-          right: '|',
-          middle: '|'
-        },
-        style: {
-          border: [],
-          head: []
-        }
-      }
-
-  const table = new Table({
-    ...tableStyle,
-    head: ['', 'Version', 'Router', 'Requests/s', 'Latency (ms)', 'Throughput/Mb']
-  })
-
-  if (markdown) {
-    table.push([':--', '--:', '--:', ':-:', '--:', '--:'])
-  }
+  const table = [
+    ['', 'Version', 'Router', 'Requests/s', 'Latency (ms)', 'Throughput/Mb'],
+    [':--', '--:', ':--:', '--:', '--:', '--:']
+  ]
 
   const results = getAvailableResults().map(file => {
     const content = readFileSync(`${resultsPath}/${file}.json`)
@@ -105,7 +74,6 @@ function compareResults (markdown) {
   const formatThroughput = throughput => throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A'
 
   for (const result of results) {
-    const beBold = result.server === 'fastify'
     const { hasRouter, version } = info(result.server) || {}
     const {
       requests: { average: requests },
@@ -125,17 +93,16 @@ function compareResults (markdown) {
     )
 
     table.push([
-      bold(beBold, chalk.blue(result.server)),
-      bold(beBold, version),
-      bold(beBold, formatHasRouter(hasRouter)),
-      bold(beBold, requests ? requests.toFixed(1) : 'N/A'),
-      bold(beBold, latency ? latency.toFixed(2) : 'N/A'),
-      bold(beBold, throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A')
+      result.server,
+      version,
+      formatHasRouter(hasRouter),
+      requests ? requests.toFixed(1) : 'N/A',
+      latency ? latency.toFixed(2) : 'N/A',
+      throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A',
     ])
   }
   writeFileSync('benchmark-results.json', JSON.stringify(outputResults), 'utf8')
-  // console.log(table)
-  return table.toString()
+  return mdTable(table)
 }
 
 async function compareResultsInteractive () {

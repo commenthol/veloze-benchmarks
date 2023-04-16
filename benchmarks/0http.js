@@ -1,5 +1,5 @@
 import cero from '0http'
-import { json } from './support/index.js'
+import { json } from './support/json.js'
 
 const { router, server } = cero()
 

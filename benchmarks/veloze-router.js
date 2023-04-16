@@ -1,18 +1,18 @@
 import * as http from 'http'
 import { Router } from 'veloze/src/Router.js'
-import { jsonSchema, json } from './support/index.js'
+import { json } from './support/json.js'
 
 const router = new Router()
 
 router.get('/', (req, res) => {
-  jsonSchema(res, { hello: 'world' })
+  json(res, { hello: 'world' })
 })
 router.post('/', (req, res) => {
   json(res, { created: true }, 201)
 })
 router.get('/:hello', (req, res) => {
   const { hello } = req.params
-  jsonSchema(res, { hello })
+  json(res, { hello })
 })
 router.put('/*', (req, res) => {
   const status = 405

@@ -1,9 +1,10 @@
 {
-  "private": true,
   "name": "veloze-benchmarks",
   "version": "0.0.1",
+  "private": true,
   "description": "Benchmarks for web frameworks",
-  "repository": "https://github.com/fastify/benchmarks.git",
+  "homepage": "https://github.com/commenthol/veloze-benchmarks",
+  "repository": "https://github.com/commenthol/veloze-benchmarks.git",
   "license": "MIT",
   "author": "Çağatay Çalı",
   "contributors": [

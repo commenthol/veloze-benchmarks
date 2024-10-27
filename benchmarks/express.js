@@ -15,7 +15,7 @@ app.get('/:hello', (req, res) => {
   const { hello } = req.params
   res.json({ hello })
 })
-app.put('/*', (req, res) => {
+app.put('/*wc', (req, res) => {
   const status = 405
   res.status(status).json({ status })
 })

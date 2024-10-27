@@ -4,9 +4,7 @@ const app = new Foxify()
 
 app.disable('x-powered-by')
 
-app.set('url', '127.0.0.1')
-  .set('port', 3000)
-  .set('workers', 1)
+app.set('url', '127.0.0.1').set('port', 3000).set('workers', 1)
 
 const schema = {
   response: {

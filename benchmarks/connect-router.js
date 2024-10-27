@@ -15,7 +15,7 @@ router.get('/:hello', (req, res) => {
   const { hello } = req.params
   json(res, { hello })
 })
-router.put('/*', (req, res) => {
+router.put('/*wc', (req, res) => {
   const status = 405
   json(res, { status }, status)
 })

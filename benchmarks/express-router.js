@@ -14,15 +14,16 @@ router.get('/:hello', (req, res) => {
   const { hello } = req.params
   json(res, { hello })
 })
-router.put('/*', (req, res) => {
+router.put('/*wc', (req, res) => {
   const status = 405
   json(res, { status }, status)
 })
 
-const app = (req, res) => router(req, res, (err) => {
-  const status = err ? 500 : 404
-  json(res, { status }, status)
-})
+const app = (req, res) =>
+  router(req, res, (err) => {
+    const status = err ? 500 : 404
+    json(res, { status }, status)
+  })
 
 const server = http.createServer(app)
 server.listen(3000)

@@ -1,7 +1,7 @@
 import 'make-promises-safe'
 import Hapi from '@hapi/hapi'
 
-async function start () {
+async function start() {
   const server = Hapi.server({ port: 3000, debug: false })
 
   server.route({
@@ -14,7 +14,7 @@ async function start () {
       },
       state: { parse: false }
     },
-    handler: function (request, h) {
+    handler: function (_request, _h) {
       return { hello: 'world' }
     }
   })
@@ -28,7 +28,7 @@ async function start () {
   server.route({
     method: 'GET',
     path: '/{hello}',
-    handler: function (request, h) {
+    handler: function (request, _h) {
       const { hello } = request.params
       return { hello }
     }

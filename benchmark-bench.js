@@ -4,12 +4,12 @@ import { choices, list } from './lib/packages.js'
 
 const argv = process.argv.slice(2)
 
-run().catch(err => {
+run().catch((err) => {
   console.error(err)
   process.exit(1)
 })
 
-async function run () {
+async function run() {
   const options = await getBenchmarkOptions()
   options.url = '/kitty'
   // options.url = '/'
@@ -19,7 +19,7 @@ async function run () {
   return bench(options, modules)
 }
 
-async function getBenchmarkOptions () {
+async function getBenchmarkOptions() {
   if (argv.length) return parseArgv()
   return inquirer.prompt([
     {
@@ -33,7 +33,7 @@ async function getBenchmarkOptions () {
       name: 'connections',
       message: 'How many connections do you need?',
       default: 100,
-      validate (value) {
+      validate(value) {
         return !Number.isNaN(parseFloat(value)) || 'Please enter a number'
       },
       filter: Number
@@ -43,7 +43,7 @@ async function getBenchmarkOptions () {
       name: 'pipelining',
       message: 'How many pipelines do you need?',
       default: 10,
-      validate (value) {
+      validate(value) {
         return !Number.isNaN(parseFloat(value)) || 'Please enter a number'
       },
       filter: Number
@@ -53,7 +53,7 @@ async function getBenchmarkOptions () {
       name: 'duration',
       message: 'How long should it take?',
       default: 10,
-      validate (value) {
+      validate(value) {
         return !Number.isNaN(parseFloat(value)) || 'Please enter a number'
       },
       filter: Number
@@ -61,7 +61,7 @@ async function getBenchmarkOptions () {
   ])
 }
 
-function parseArgv () {
+function parseArgv() {
   const [all, connections, pipelining, duration] = argv
   return {
     all: all === 'y',
@@ -71,7 +71,7 @@ function parseArgv () {
   }
 }
 
-async function select () {
+async function select() {
   const result = await inquirer.prompt([
     {
       type: 'checkbox',
@@ -99,12 +99,12 @@ async function select () {
  * @param {any[]} arr
  * @returns {any[]} shuffled array
  */
-export function shuffle (arr) {
+export function shuffle(arr) {
   const _arr = [...arr]
 
   for (let i = _arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [_arr[i], _arr[j]] = [_arr[j], _arr[i]]
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[_arr[i], _arr[j]] = [_arr[j], _arr[i]]
   }
 
   return _arr

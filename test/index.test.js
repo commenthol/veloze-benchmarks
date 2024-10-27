@@ -7,22 +7,19 @@ import { mdTable } from '../lib/mdTable.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const nap = (ms = 20) => new Promise((resolve) => setTimeout(() => {
-  resolve(ms)
-}, ms))
+const nap = (ms = 20) =>
+  new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(ms)
+    }, ms)
+  )
 
 const get = (url) =>
-  supertest(url)
-    .get('/')
-    .expect(200)
-    .expect({ hello: 'world' })
+  supertest(url).get('/').expect(200).expect({ hello: 'world' })
 
 const getParam = (url) =>
-  supertest(url)
-    .get('/kitty')
-    .expect(200)
-    .expect({ hello: 'kitty' })
-    // .then(({ body, status }) => console.log(body, status))
+  supertest(url).get('/kitty').expect(200).expect({ hello: 'kitty' })
+// .then(({ body, status }) => console.log(body, status))
 
 const post = (url) =>
   supertest(url)
@@ -31,18 +28,12 @@ const post = (url) =>
     .send({ hello: 'new' })
     .expect(201)
     .expect({ created: true })
-    // .then(({ body, status }) => console.log(body, status))
+// .then(({ body, status }) => console.log(body, status))
 
-const notFound = (url) =>
-  supertest(url)
-    .get('/foo/bar')
-    .expect(404)
-    // .then(({ body, status }) => console.log(body, status))
+const notFound = (url) => supertest(url).get('/foo/bar').expect(404)
+// .then(({ body, status }) => console.log(body, status))
 
-const update = (url) =>
-  supertest(url)
-    .put('/foo')
-    .expect(405)
+const update = (url) => supertest(url).put('/foo').expect(405)
 
 const startupTimes = {}
 
@@ -50,7 +41,9 @@ const startup = async (url, handler) => {
   const start = process.hrtime.bigint()
   const end = Date.now() + 500
   while (Date.now() < end) {
-    const res = await supertest(url).get('/').catch(() => {})
+    const res = await supertest(url)
+      .get('/')
+      .catch(() => {})
     if (res !== undefined) {
       break
     }
@@ -77,7 +70,6 @@ const packages = [
   'restify',
   'server-base-router',
   'take-five',
-  'total',
   'uws-connect',
   'veloze',
   'veloze-router',
@@ -91,11 +83,7 @@ describe('test', function () {
     const sortedTimes = Object.entries(startupTimes)
       .sort((a, b) => a[1] - b[1])
       .map(([k, v]) => [v, k])
-    const table = [
-      ['Startup (ms)', ''],
-      ['--:', '---'],
-      ...sortedTimes
-    ]
+    const table = [['Startup (ms)', ''], ['--:', '---'], ...sortedTimes]
     console.log(mdTable(table))
   })
 

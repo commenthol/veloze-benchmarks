@@ -11,7 +11,6 @@ const app = (req, res) => {
       json(res, { hello: 'world' })
       return
     } else {
-      // eslint-disable-next-line no-unused-vars
       const [_, hello, other] = path.split('/')
       if (hello && !other) {
         json(res, { hello })

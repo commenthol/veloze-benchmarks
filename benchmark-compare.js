@@ -34,19 +34,19 @@ if (!getAvailableResults().length) {
   compareResultsInteractive()
 }
 
-function getAvailableResults () {
+function getAvailableResults() {
   return readdirSync(resultsPath)
     .filter((file) => file.match(/(.+)\.json$/))
     .sort()
     .map((choice) => choice.replace('.json', ''))
 }
 
-function formatHasRouter (hasRouter) {
-  return typeof hasRouter === 'string' ? hasRouter : (hasRouter ? '✓' : '✗')
+function formatHasRouter(hasRouter) {
+  return typeof hasRouter === 'string' ? hasRouter : hasRouter ? '✓' : '✗'
 }
 
-function updateReadme () {
-  const machineInfo = `${platform()} ${arch()} | ${cpus().length} vCPUs | ${(totalmem() / (1024 ** 3)).toFixed(1)}GB Mem`
+function updateReadme() {
+  const machineInfo = `${platform()} ${arch()} | ${cpus().length} vCPUs | ${(totalmem() / 1024 ** 3).toFixed(1)}GB Mem`
   const benchmarkMd = `# Benchmarks
 
 * __Machine:__ ${machineInfo}
@@ -59,19 +59,22 @@ ${compareResults(true)}
   writeFileSync('README.md', md.split('# Benchmarks')[0] + benchmarkMd, 'utf8')
 }
 
-function compareResults (markdown) {
+function compareResults(_markdown) {
   const table = [
     ['', 'Version', 'Router', 'Requests/s', 'Latency (ms)', 'Throughput/Mb'],
     [':--', '--:', ':--:', '--:', '--:', '--:']
   ]
 
-  const results = getAvailableResults().map(file => {
-    const content = readFileSync(`${resultsPath}/${file}.json`)
-    return JSON.parse(content.toString())
-  }).sort((a, b) => parseFloat(b.requests.mean) - parseFloat(a.requests.mean))
+  const results = getAvailableResults()
+    .map((file) => {
+      const content = readFileSync(`${resultsPath}/${file}.json`)
+      return JSON.parse(content.toString())
+    })
+    .sort((a, b) => parseFloat(b.requests.mean) - parseFloat(a.requests.mean))
 
   const outputResults = []
-  const formatThroughput = throughput => throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A'
+  const formatThroughput = (throughput) =>
+    throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A'
 
   for (const result of results) {
     const { hasRouter, version } = info(result.server) || {}
@@ -81,16 +84,14 @@ function compareResults (markdown) {
       throughput: { average: throughput }
     } = result
 
-    outputResults.push(
-      {
-        name: result.server,
-        version,
-        hasRouter,
-        requests: requests ? requests.toFixed(1) : 'N/A',
-        latency: latency ? latency.toFixed(2) : 'N/A',
-        throughput: formatThroughput(throughput)
-      }
-    )
+    outputResults.push({
+      name: result.server,
+      version,
+      hasRouter,
+      requests: requests ? requests.toFixed(1) : 'N/A',
+      latency: latency ? latency.toFixed(2) : 'N/A',
+      throughput: formatThroughput(throughput)
+    })
 
     table.push([
       result.server,
@@ -98,31 +99,35 @@ function compareResults (markdown) {
       formatHasRouter(hasRouter),
       requests ? requests.toFixed(1) : 'N/A',
       latency ? latency.toFixed(2) : 'N/A',
-      throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A',
+      throughput ? (throughput / 1024 / 1024).toFixed(2) : 'N/A'
     ])
   }
   writeFileSync('benchmark-results.json', JSON.stringify(outputResults), 'utf8')
   return mdTable(table)
 }
 
-async function compareResultsInteractive () {
+async function compareResultsInteractive() {
   let choices = getAvailableResults()
 
-  const firstChoice = await inquirer.prompt([{
-    type: 'list',
-    name: 'choice',
-    message: 'What\'s your first pick?',
-    choices
-  }])
+  const firstChoice = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: "What's your first pick?",
+      choices
+    }
+  ])
 
-  choices = choices.filter(choice => choice !== firstChoice.choice)
+  choices = choices.filter((choice) => choice !== firstChoice.choice)
 
-  const secondChoice = await inquirer.prompt([{
-    type: 'list',
-    name: 'choice',
-    message: 'What\'s your second one?',
-    choices
-  }])
+  const secondChoice = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: "What's your second one?",
+      choices
+    }
+  ])
 
   const [a, b] = [firstChoice.choice, secondChoice.choice]
   const result = compare(a, b)
@@ -144,6 +149,6 @@ async function compareResultsInteractive () {
  • ${slowest} ${chalk.blue('request average is')} ${slowestAverage}`)
 }
 
-function bold (writeBold, str) {
-  return writeBold ? chalk.bold(str) : str
-}
+// function bold(writeBold, str) {
+//   return writeBold ? chalk.bold(str) : str;
+// }

@@ -65,9 +65,10 @@ const packages = [
   'foxify',
   'h3-router',
   'hapi',
+  'hono',
   'polka',
   'restana',
-  'restify',
+  // 'restify' // not working on node@24 https://github.com/restify/node-restify/issues/1984
   'server-base-router',
   'take-five',
   'uws-connect',

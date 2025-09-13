@@ -31,24 +31,24 @@ response is returned from that server.
 
 | Startup (ms) |                    |
 | -----------: | ------------------ |
-|           46 | polka              |
-|           49 | bare               |
-|           50 | restana            |
-|           52 | 0http              |
-|           55 | take-five          |
-|           56 | connect-router     |
-|           64 | h3-router          |
-|           64 | yeps-router        |
-|           70 | uws-connect        |
-|           80 | **veloze**-router  |
-|           83 | express            |
-|           89 | server-base-router |
-|           97 | **veloze**         |
-|          106 | express-router     |
-|          127 | hapi               |
-|          152 | foxify             |
-|          168 | fastify            |
-|          305 | restify            |
+|           25 | polka              |
+|           29 | 0http              |
+|           29 | restana            |
+|           31 | take-five          |
+|           32 | bare               |
+|           34 | connect-router     |
+|           35 | yeps-router        |
+|           37 | h3-router          |
+|           37 | uws-connect        |
+|           38 | hono               |
+|           46 | server-base-router |
+|           59 | express            |
+|           63 | **veloze**-router  |
+|           64 | express-router     |
+|           67 | hapi               |
+|           67 | **veloze**         |
+|           70 | fastify            |
+|           80 | foxify             |
 
 # Explanations
 
@@ -72,39 +72,41 @@ Test variation:
 
 # Benchmarks
 
-- **Machine:** darwin arm64 | 8 vCPUs | 8.0GB Mem
-- **Node:** `v22.10.0`
+- **Machine:** darwin arm64 | 8 vCPUs | 16.0GB Mem
+- **Node:** `v24.7.0`
 - **Method:** `autocannon -c 100 -d 10 -p 10 localhost:3000` (two rounds; one to warm-up, one to measure)
 
 |                              | Version | Router | Requests/s | Latency (ms) | Throughput/Mb |
 | :--------------------------- | ------: | :----: | ---------: | -----------: | ------------: |
-| uws-connect                  |   1.2.4 |   ✓    |   184663.3 |         4.94 |         24.66 |
-| bare                         | 22.10.0 |   ✗    |   140189.1 |         6.64 |         25.00 |
-| fastify                      |   5.0.0 |   ✓    |   133366.4 |         7.02 |         23.91 |
-| foxify                       | 0.10.20 |   ✓    |   131953.5 |         7.08 |         21.65 |
-| polka                        |   0.5.2 |   ✓    |   126728.7 |         7.37 |         22.60 |
-| server-base-router           | 14.10.7 |   ✓    |   126278.4 |         7.41 |         22.52 |
-| express-router               |   5.0.1 |   ✓    |   121218.9 |         7.74 |         21.62 |
-| **veloze**-router            |   1.0.0 |   ✓    |   119654.4 |         7.85 |         21.34 |
-| **veloze**                   |   1.0.0 |   ✓    |   115074.9 |         8.21 |         20.52 |
-| connect-router               |   2.0.0 |   ✓    |   114720.0 |         8.23 |         20.46 |
-| h3-router                    |  1.13.0 |   ✓    |   113478.4 |         8.31 |         18.62 |
-| 0http                        |   3.5.3 |   ✓    |   113049.6 |         8.36 |         20.16 |
-| restana                      |   4.9.9 |   ✓    |   103219.2 |         9.19 |         18.41 |
-| restify                      |  11.1.0 |   ✓    |    94560.0 |        10.09 |         17.04 |
-| take-five                    |   2.0.0 |   ✓    |    92256.0 |        10.34 |         33.17 |
-| hapi                         | 21.3.12 |   ✓    |    81637.8 |        11.76 |         18.22 |
-| yeps-router                  |   1.2.0 |   ✓    |    78338.9 |        12.28 |         13.97 |
-| express                      |   5.0.1 |   ✓    |    22371.6 |        44.12 |          3.99 |
+| uws-connect                  |   1.4.0 |   ✓    |   243302.4 |         3.66 |         32.48 |
+| 0http                        |   4.3.0 |   ✓    |   167449.6 |         5.46 |         29.86 |
+| bare                         |  24.7.0 |   ✗    |   165145.6 |         5.65 |         29.45 |
+| foxify                       | 0.10.20 |   ✓    |   162521.6 |         5.70 |         26.66 |
+| server-base-router           |  7.1.32 |   ✓    |   159598.5 |         5.78 |         28.47 |
+| restana                      |  v5.1.0 |   ✓    |   158348.8 |         5.86 |         28.24 |
+| fastify                      |   5.6.0 |   ✓    |   157811.2 |         5.82 |         28.29 |
+| **veloze**-router            |   1.3.0 |   ✓    |   157376.0 |         5.83 |         28.06 |
+| polka                        |   0.5.2 |   ✓    |   157120.0 |         5.85 |         28.02 |
+| **veloze**                   |   1.3.0 |   ✓    |   156049.5 |         5.92 |         27.83 |
+| express-router               |   5.1.0 |   ✓    |   149533.1 |         6.13 |         26.67 |
+| connect-router               |   2.2.0 |   ✓    |   144157.1 |         6.31 |         25.71 |
+| h3-router                    |  1.15.4 |   ✓    |   142481.5 |         6.49 |         23.37 |
+| hono                         |   4.9.7 |   ✓    |   126368.0 |         7.39 |         20.73 |
+| take-five                    |   2.0.0 |   ✓    |   124704.0 |         7.51 |         44.84 |
+| hapi                         |  21.4.3 |   ✓    |   104736.0 |         9.04 |         23.38 |
+| express                      |   5.1.0 |   ✓    |    94342.4 |        10.18 |         16.82 |
+| yeps-router                  |   1.2.0 |   ✓    |    49682.9 |        19.60 |          8.86 |
 |                              |         |        |            |              |               |
-| uws-connect-with-middlewares |   1.2.4 |   ✓    |   129849.6 |         7.19 |         39.01 |
-| polka-with-middlewares       |   0.5.2 |   ✓    |    96819.2 |         9.83 |         33.42 |
-| **veloze**-with-middlewares  |   1.0.0 |   ✓    |    94612.4 |        10.07 |         32.66 |
-| fastify-with-middlewares     |   5.0.0 |   ✓    |    23265.6 |        42.41 |          8.05 |
-| express-with-middlewares     |   5.0.1 |   ✓    |    20179.6 |        48.95 |          6.97 |
+| uws-connect-with-middlewares |   1.4.0 |   ✓    |   185625.6 |         4.93 |         55.77 |
+| polka-with-middlewares       |   0.5.2 |   ✓    |   135372.8 |         6.86 |         46.73 |
+| **veloze**-with-middlewares  |   1.3.0 |   ✓    |   130722.9 |         7.22 |         45.12 |
+| express-with-middlewares     |   5.1.0 |   ✓    |    80473.6 |        11.95 |         27.78 |
+| hono-with-middlewares        |   4.9.7 |   ✓    |    58972.8 |        16.45 |         21.88 |
+| fastify-with-middlewares     |   5.6.0 |   ✓    |    54808.7 |        17.71 |         18.97 |
 |                              |         |        |            |              |               |
-| **veloze**-big-json          |   1.0.0 |   ✓    |    33929.6 |        28.94 |        403.25 |
-| polka-big-json               |   0.5.2 |   ✓    |    33869.1 |        28.99 |        402.60 |
-| uws-connect-big-json         |   1.2.4 |   ✓    |    29892.8 |        32.90 |        353.98 |
-| fastify-big-json             |   5.0.0 |   ✓    |    23997.8 |        41.10 |        285.28 |
-| express-big-json             |   5.0.1 |   ✓    |    14818.5 |        66.77 |        176.13 |
+| uws-connect-big-json         |   1.4.0 |   ✓    |    34744.7 |        28.26 |        411.38 |
+| express-big-json             |   5.1.0 |   ✓    |    33818.4 |        29.04 |        401.93 |
+| polka-big-json               |   0.5.2 |   ✓    |    33147.6 |        29.62 |        394.01 |
+| **veloze**-big-json          |   1.3.0 |   ✓    |    32913.5 |        29.82 |        391.19 |
+| hono-big-json                |   4.9.7 |   ✓    |    31632.7 |        31.05 |        375.56 |
+| fastify-big-json             |   5.6.0 |   ✓    |    24742.5 |        39.84 |        294.17 |
